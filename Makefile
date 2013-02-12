@@ -1,5 +1,4 @@
 CC?=gcc
-CFLAGS?=-shared -fPIC -ldl
 OUTPUT=libnetredirect.so
 
 BIN_PATH?=/usr/bin
@@ -11,7 +10,7 @@ LIB_PATH?=/usr/lib
 all: $(OUTPUT)
 
 $(OUTPUT): libnetredirect.c
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) -shared -fPIC $^ -ldl -o $@
 
 test:
 	./test
