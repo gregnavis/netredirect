@@ -1,6 +1,12 @@
 #!/bin/sh
 
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <redirection server IP> <command> [arguments]"
+    exit 2
+fi
+
 export NETREDIRECT_HOST="$1"
 export LD_PRELOAD="libnetredirect.so"
+
 shift
 exec $@
