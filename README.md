@@ -39,7 +39,7 @@ Limitations
     same directory
   - currently only TCP is supported
   - may break DNS name resolution if done over TCP
-  - `NETCAPTURE_HOST` *must* be an IPv4 address in the dotted notation
+  - `NETREDIRECT_HOST` *must* be an IPv4 address in the dotted notation
   - no UDP or IPv6 support
   - no port redirection
   - no error checking in the `netredirect` script

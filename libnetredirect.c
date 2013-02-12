@@ -15,7 +15,7 @@
 typedef int (*connect_function)(int, const struct sockaddr *, socklen_t);
 
 
-static const char *host_variable = "NETCAPTURE_HOST";
+static const char *host_variable = "NETREDIRECT_HOST";
 
 
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
