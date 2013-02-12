@@ -1,4 +1,6 @@
 language: c
 compiler:
   - gcc
+before_install:
+  - sudo apt-get install netcat-traditional
 script: make all test
