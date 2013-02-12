@@ -1,6 +1,8 @@
 netredirect - network traffic redirection utility
 =================================================
 
+[![Build Status](https://travis-ci.org/grn/netredirect.png?branch=master)](https://travis-ci.org/grn/netredirect)
+
 `netredirect` allows you to redirect *all* outbound connections made
 from a given program to another host. For example:
 

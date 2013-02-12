@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -eu
+
+DATA="foobar"
+TEMP_FILE=`mktemp`
+
+# Start a test server that will receive our data.
+nc -l -p 8888 >& $TEMP_FILE &
+NC_PID=$!
+
+# Kill the server and remove the data file when exiting.
+function cleanup {
+    set +e
+    kill $NC_PID >& /dev/null
+    rm $TEMP_FILE
+    set -e
+}
+trap cleanup EXIT
+
+# Wait a second for the server to set up.
+sleep 1
+
+# Send data to the server.
+echo -n "$DATA" | ./netredirect 127.0.0.1 nc -q 0 -w 5 1.2.3.4 8888
+
+# Verify the data.
+RECEIVED=`cat $TEMP_FILE`
+if [ "$DATA" != "$RECEIVED" ]; then
+    echo "Error: sent \"$DATA\" but received \"$RECEIVED\"" 2>1
+    exit 1
+fi
