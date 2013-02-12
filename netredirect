@@ -1,6 +1,6 @@
 #!/bin/sh
 
 export NETREDIRECT_HOST="$1"
-export LD_PRELOAD="./libnetredirect.so"
+export LD_PRELOAD="libnetredirect.so"
 shift
 exec $@

@@ -2,6 +2,8 @@
 
 set -eu
 
+export LD_LIBRARY_PATH="."
+
 DATA="foobar"
 TEMP_FILE=`mktemp`
 

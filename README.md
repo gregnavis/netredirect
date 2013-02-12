@@ -16,6 +16,35 @@ Because of the method that `netredirect` uses to achieve its result only
 programs that use network system calls through `libc` wrappers can be
 redirected.
 
+Installation
+------------
+
+In order to install do the following:
+
+```
+git clone https://github.com/grn/netredirect
+cd netredirect
+make all
+```
+
+Then as root:
+
+```
+make install
+```
+
+The files are installed under `/usr/bin` and `/usr/lib` by default. The
+locations can be changed by passing `BIN_PATH` and `LIB_PATH` variables
+to `make`. If you want to install under `/bin` and `/lib` do the following:
+
+```
+make BIN_PATH=/bin LIB_PATH=/lib install
+```
+
+Now you are ready to use it!
+
+Uninstallation is left as an exercise to the user.
+
 Motivation
 ----------
 
