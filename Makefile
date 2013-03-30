@@ -13,7 +13,7 @@ $(OUTPUT): libnetredirect.c
 	$(CC) -shared -fPIC $^ -ldl -o $@
 
 test:
-	bash -x ./test
+	./test
 
 install: all
 	install -o root -g root -m 0755 $(OUTPUT) $(LIB_PATH)

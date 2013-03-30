@@ -24,7 +24,7 @@ trap cleanup EXIT
 sleep 1
 
 # Send data to the server.
-echo -n "$DATA" | ./netredirect 127.0.0.1 nc -q 0 -w 5 1.2.3.4 8888
+echo -n "$DATA" | ./netredirect 127.0.0.1 8888 nc -q 0 -w 5 1.2.3.4 7777
 
 # Verify the data.
 RECEIVED=`cat $TEMP_FILE`
