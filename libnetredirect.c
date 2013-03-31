@@ -19,26 +19,38 @@ static const char *host_variable = "NETREDIRECT_HOST";
 static const char *port_variable = "NETREDIRECT_PORT";
 
 
-static void redirect_host(int sockfd, const struct sockaddr *addr)
+static int is_redirectable(int sockfd, struct sockaddr_in *sin)
 {
-	char *host = getenv(host_variable);
-	struct sockaddr_in *sin = (struct sockaddr_in *) addr;
-	int type;
+	int result, type;
 	socklen_t type_length = sizeof(type);
 
-	if (!host) {
-		goto out;
-	}
-
 	if (AF_INET != sin->sin_family) {
-		goto out;
+		goto out0;
 	}
 
 	if (getsockopt(sockfd, SOL_SOCKET, SO_TYPE, &type, &type_length)) {
-		goto out;
+		goto out0;
 	}
 
 	if (SOCK_STREAM != type) {
+		goto out0;
+	}
+
+	result = 1;
+
+out:
+	return result;
+
+out0:
+	result = 0;
+	goto out;
+}
+
+static void redirect_host(int sockfd, struct sockaddr_in *sin)
+{
+	char *host = getenv(host_variable);
+
+	if (!host) {
 		goto out;
 	}
 
@@ -50,26 +62,11 @@ out:
 	return;
 }
 
-static void redirect_port(int sockfd, const struct sockaddr *addr)
+static void redirect_port(int sockfd, struct sockaddr_in *sin)
 {
 	char *port = getenv(port_variable);
-	struct sockaddr_in *sin = (struct sockaddr_in *) addr;
-	int type;
-	socklen_t type_length = sizeof(type);
 
 	if (!port) {
-		goto out;
-	}
-
-	if (AF_INET != sin->sin_family) {
-		goto out;
-	}
-
-	if (getsockopt(sockfd, SOL_SOCKET, SO_TYPE, &type, &type_length)) {
-		goto out;
-	}
-
-	if (SOCK_STREAM != type) {
 		goto out;
 	}
 
@@ -82,9 +79,14 @@ out:
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
 	connect_function system_connect = dlsym(RTLD_NEXT, "connect");
+	struct sockaddr_in *sin = (struct sockaddr_in *) addr;
 
-	redirect_host(sockfd, addr);
-	redirect_port(sockfd, addr);
+	if (!is_redirectable(sockfd, sin)) {
+		goto out;
+	}
+
+	redirect_host(sockfd, sin);
+	redirect_port(sockfd, sin);
 
 out:
 	return system_connect(sockfd, addr, addrlen);
