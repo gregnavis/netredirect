@@ -2,6 +2,7 @@
 #define _GNU_SOURCE
 
 #include <stdlib.h>
+#include <string.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -79,7 +80,10 @@ out:
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
 	connect_function system_connect = dlsym(RTLD_NEXT, "connect");
-	struct sockaddr_in *sin = (struct sockaddr_in *) addr;
+	struct sockaddr addr_copy;
+	struct sockaddr_in *sin = (struct sockaddr_in *) &addr_copy;
+
+	memcpy(&addr_copy, addr, sizeof(addr_copy));
 
 	if (!is_redirectable(sockfd, sin)) {
 		goto out;
@@ -89,5 +93,5 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 	redirect_port(sockfd, sin);
 
 out:
-	return system_connect(sockfd, addr, addrlen);
+	return system_connect(sockfd, &addr_copy, addrlen);
 }
