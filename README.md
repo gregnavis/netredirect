@@ -7,14 +7,18 @@ netredirect - network traffic redirection utility
 from a given program to another host. For example:
 
 ```
-netredirect 127.0.0.1 curl http://www.google.com
+netredirect 127.0.0.1 8080 curl http://www.google.com
 ```
 
-will send the request to port 80 on `localhost`!
+will send the request to port 8080 on `localhost`!
 
 Because of the method that `netredirect` uses to achieve its result only
 programs that use network system calls through `libc` wrappers can be
 redirected.
+
+When the host or port argument to `netredirect` is `original` then the
+original value is preserved. That allows you to perform host-only and
+port-only redirection.
 
 Installation
 ------------
@@ -72,5 +76,4 @@ Limitations
   - may break DNS name resolution if done over TCP
   - `NETREDIRECT_HOST` *must* be an IPv4 address in the dotted notation
   - no UDP or IPv6 support
-  - no port redirection
   - no error checking in the `netredirect` script
